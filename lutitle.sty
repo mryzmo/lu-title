@@ -1,0 +1,116 @@
+% Package by Sebastin Pfaff to produce a title page which
+% adheres to the Lund University style guide as of 2016.
+%
+%% This program can be redistributed and/or modified under the terms
+%% of the LaTeX Project Public License Distributed from CTAN archives
+%% in directory macros/latex/base/lppl.txt.
+% 
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{lutitle}[2016/06/01 Creates a Lund University title page.]
+
+\RequirePackage{color}
+\RequirePackage{tikz}
+\RequirePackage{varwidth}
+\usetikzlibrary{shapes,arrows,calc}
+\pgfplotsset{compat=1.12}
+\RequirePackage[12pt]{moresize}
+
+\RequirePackage[]{fontspec}
+
+\setmainfont[
+ Path=fonts/,
+ Extension = .otf,
+ UprightFont= *-Regular,
+ BoldFont=*-Semibold.otf, 
+ ItalicFont=*-Italic,
+ BoldItalicFont=*-BoldItalic
+ ]{AGaramondPro}
+ 
+\setsansfont[
+ Path=fonts/,
+ Extension = .otf,
+ UprightFont= *-Roman,
+ BoldFont=*-Bold, 
+ ItalicFont=*-Italic,
+ BoldItalicFont=*-BoldItalic
+ ]{FrutigerLTStd}
+
+\def\titlecolor#1{\gdef\@titlecolor{#1}}
+\def\titleimage#1{\gdef\@titleimage{#1}}
+\def\subtitle#1{\gdef\@subtitle{#1}}
+\def\titleimage#1{\gdef\@titleimage{#1}}
+
+
+\def\@maketitle{
+\newpage
+\thispagestyle{empty}
+%\newlength{\titlelength} 
+\begin{tikzpicture}[overlay,remember picture,shift={(current page.south west)}]
+
+%draw the colored background
+\ifx\@titlecolor\@empty
+	\draw[fill=LUPink, line width=0cm, draw=none, use as bounding box] (0,0)
+	rectangle (\paperwidth, 1\paperheight);
+\else
+	\draw[fill=\@titlecolor, line width=0cm, draw=none, use as bounding box] (0,0)
+	rectangle (\paperwidth, 1\paperheight);
+\fi
+
+%draw background image
+\ifx\@titleimage\@empty
+	%if no title image
+\else
+	\begin{scope}
+		\clip (.15, .15) rectangle ($(\paperwidth,1\paperheight) - (-.1, .15)$);
+		\node[inner sep=0, anchor=south west] at (.15,.15) {\@titleimage};
+	\end{scope}
+\fi
+
+\renewcommand{\baselinestretch}{.9}
+
+%draw title
+\node[draw=none, shape=rectangle,minimum height=1cm, align=flush left, fill=white, inner ysep=1cm, inner xsep=.7cm,font=\HUGE,anchor=north west,outer sep=0]
+ at (.26\paperwidth, .82\paperheight) (titlenode) {\begin{varwidth}{13.5cm}\textbf{\color{LUCopper}{\HUGE
+ \@title \strut}}\end{varwidth}};
+
+\draw[fill=white,draw=none] 
+($(titlenode.south east)+(-.2cm,0)$) rectangle ($(titlenode.north east)+(\paperwidth,0)$);
+%\draw[fill=red,draw=none] 
+%($(titlenode.south west)+(0,.1cm)$) rectangle ($(titlenode.south east)+(\paperwidth,-0.2cm)$);
+\begin{scope}
+\clip (.15, .15) rectangle ($(\paperwidth,1\paperheight) - (-.1, .15)$);
+\draw[very thick, draw=LUCopper] ($(titlenode.south west)+(0.7,.9cm)$) -- ($(titlenode.south east)+(\paperwidth,.9cm)$);
+\end{scope}
+    \ifx\@subtitle\@empty
+      %do nothing
+    \else
+     %\draw[fill=red,draw=none]
+     %($(titlenode.south west)+(0,-0.1cm)$) rectangle ($(titlenode.south east)+(\paperwidth,-0.5cm)$);
+     %\setlength{\titlelength}{\widthof{\node {titlenode};}} 
+     \node[align=flush left, anchor=north west, draw=none,fill=white,inner xsep=.7cm,inner ysep=0,font=\Large,text=LUCopper,text width=20 cm,outer sep=0] at ($(titlenode.south west)+(0, 0.4cm)$) (subtitlenode)  {\begin{varwidth}{14cm}\MakeUppercase{\textbf{\sffamily \@subtitle \strut}}\end{varwidth}};
+     \draw[fill=white,draw=none] ($(subtitlenode.south west)+(0,0.1cm)$) rectangle ($(subtitlenode.south east)+(\paperwidth,-0.8cm)$);
+    \fi
+
+%draw white border
+	\draw[fill=none, line width=1.2cm, draw=white, use as bounding box] (0,0) rectangle (\paperwidth, 1\paperheight);
+
+\node at ($(\paperwidth,0.21)-(3cm,0)$) {\includegraphics[scale=1]{lulogo-pdf}};
+%\node[anchor=north west] at ($(0,\paperheight)-(0cm,0cm)$) {\includegraphics[scale=.15]{lulogo-pdf}};
+\end{tikzpicture}
+%\pgftext[at=\pgfpoint{.7\paperwidth}{-1.575\paperheight},left,base]{\pgfuseimage{main-logo}}
+\thispagestyle{empty}
+\newpage
+}
+
+
+
+
+\definecolor{LUCopper}{RGB}{156,97,20} %Kopparn som tydligen ska användas till typ allt
+\definecolor{LUBlue}{RGB}{0,0,128} %Den ganska mörka blåa färgen som LU har, anänds inte så mycket längre
+\definecolor{LUPink}{RGB}{233,196,199} %denna är någon sorts officiell rosa som man kan ha som accentfärg
+\definecolor{LUGreen}{RGB}{173,202,184} %Fler officiella accentfärger
+\definecolor{LULBlue}{RGB}{185,211,220}
+\definecolor{LUIvory}{RGB}{214,210,196}
+
+%%
+%% End of file `lutitle.sty'.
