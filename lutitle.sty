@@ -9,7 +9,7 @@
 \ProvidesPackage{lutitle}[2016/06/01 Creates a Lund University title page.]
 
 \RequirePackage{color}
-\RequirePackage{tikz}
+\RequirePackage{tikz,pgfplots}
 \RequirePackage{varwidth}
 \usetikzlibrary{shapes,arrows,calc}
 \pgfplotsset{compat=1.12}
@@ -17,6 +17,7 @@
 
 \RequirePackage[]{fontspec}
 
+\IfFileExists{fonts/AGaramondPro-Regular.otf}{
 \setmainfont[
  Path=fonts/,
  Extension = .otf,
@@ -24,8 +25,12 @@
  BoldFont=*-Semibold.otf, 
  ItalicFont=*-Italic,
  BoldItalicFont=*-BoldItalic
- ]{AGaramondPro}
+ ]{AGaramondPro}}
+ {
+ \setmainfont[]{EB Garamond}
+ }
  
+\IfFileExists{fonts/FrutigerLTStd-Bold.otf}{
 \setsansfont[
  Path=fonts/,
  Extension = .otf,
@@ -33,7 +38,10 @@
  BoldFont=*-Bold, 
  ItalicFont=*-Italic,
  BoldItalicFont=*-BoldItalic
- ]{FrutigerLTStd}
+ ]{FrutigerLTStd}}
+ {
+ \setsansfont[]{Arial}
+ }
 
 \def\titlecolor#1{\gdef\@titlecolor{#1}}
 \def\titleimage#1{\gdef\@titleimage{#1}}
